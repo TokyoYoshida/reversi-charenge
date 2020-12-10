@@ -50,6 +50,24 @@ class ViewController: UIViewController {
         }
         turn += 1
         sender.setTitle("●", for: .normal)
+        putByAI()
+    }
+    
+    func putByAI() {
+        var nextMove = BetaReversi.thinkNextMove(board: state)
+
+        for stack in board.subviews {
+            for button in stack.subviews {
+                if nextMove == 0 {
+                    let b = button as! UIButton
+                    state[nextMove] = .pointWhite
+                    b.setTitle("●", for: .normal)
+                    b.setTitleColor(.white, for: .normal)
+                    return
+                }
+                nextMove -= 1
+            }
+        }
     }
 }
 
