@@ -11,6 +11,7 @@ enum State {
     case pointBlack
     case pointWhite
 }
+
 class ViewController: UIViewController {
 
     var turn: Int = 0
@@ -36,17 +37,19 @@ class ViewController: UIViewController {
     
     @objc func tapButton(_ sender: UIButton) {
         print("@@@" + sender.tag.description)
-        if state[sender.tag] == .pointNone {
-            if turn % 2 == 0 {
-                sender.setTitleColor(.white, for: .normal)
-                state[sender.tag] = .pointWhite
-            } else {
-                sender.setTitleColor(.black, for: .normal)
-                state[sender.tag] = .pointBlack
-            }
-            turn += 1
-            sender.setTitle("●", for: .normal)
+        switch state[sender.tag] {
+        case .pointNone:
+            sender.setTitleColor(.black, for: .normal)
+            state[sender.tag] = .pointBlack
+        case .pointBlack:
+            sender.setTitleColor(.white, for: .normal)
+            state[sender.tag] = .pointWhite
+        case .pointWhite:
+            sender.setTitleColor(.black, for: .normal)
+            state[sender.tag] = .pointBlack
         }
+        turn += 1
+        sender.setTitle("●", for: .normal)
     }
 }
 
