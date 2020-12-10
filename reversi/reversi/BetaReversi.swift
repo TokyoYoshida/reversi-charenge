@@ -11,37 +11,21 @@ import CoreML
 struct BetaReversi {
     struct boardConverter {
         static func convert(_ board: [State]) -> MLMultiArray {
-            let mlArray = try! MLMultiArray(shape: [1,2,8,8], dataType: .float32)
-            let board = [
-                [
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,1,0,0,0],
-                    [0,0,0,1,0,1,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                ]
-                ,
-                [
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,1,0,0,0,0],
-                    [0,0,0,0,1,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                    [0,0,0,0,0,0,0,0],
-                ]
-            ]
-            for i in 0..<2 {
+            func put(_ array: MLMultiArray, _ index: Int, _ targetState: State) {
                 for j in 0..<8{
                     for k in 0..<8{
-                        mlArray[8*8*i + 8*j + k] = board[i][j][k] as NSNumber
+                        if board[j*8 + k] == targetState {
+                            mlArray[8*8*index + 8*j + k] = 1
+                        } else {
+                            mlArray[8*8*index + 8*j + k] = 0
+                        }
                     }
                 }
             }
+            let mlArray = try! MLMultiArray(shape: [1,2,8,8], dataType: .float32)
+            put(mlArray, 0, .pointWhite)
+            put(mlArray, 1, .pointBlack)
+            print(ReversiModelDecoder.decode(mlArray))
             return mlArray
         }
     }
@@ -61,8 +45,8 @@ struct BetaReversi {
             return sorted[0].index
         }
     }
-    static func predict(_ board: [State], completion: ([Float32]) -> Void) {
-        let model = reversi()
+    static func predict(_ board: [State], completion: ([Float32]) -> Void)  {
+        let model = try reversi()
         let mlArray = boardConverter.convert(board)
         let inputToModel: reversiInput = reversiInput(permute_2_input: mlArray)
         if let prediction = try? model.prediction(input: inputToModel) {
