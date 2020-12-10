@@ -54,9 +54,10 @@ class ViewController: UIViewController {
     }
     
     func putByAI() {
-        var nextMove = BetaReversi.thinkNextMove(state) {
-            (move) in
-            var nextMove = move
+        BetaReversi.predict(state) {
+            (predict) in
+            var nextMove = BetaReversi.ReversiPredictionDecoder.descode(predict)
+            print(nextMove)
             for stack in board.subviews {
                 for button in stack.subviews {
                     if nextMove == 0 {

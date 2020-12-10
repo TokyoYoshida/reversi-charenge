@@ -46,18 +46,22 @@ struct BetaReversi {
         }
     }
     struct ReversiModelDecoder {
-        static func decode(_ coreMLResult: MLMultiArray) -> Int {
-            var res_board = Array(repeating: Array(repeating: Float32(0), count: 8), count: 8)
-            for j in 0..<8{
-                for k in 0..<8{
-                    res_board[j][k] = round(coreMLResult[8*j + k] as! Float32)
-                }
+        static func decode(_ coreMLResult: MLMultiArray) -> [Float32] {
+            var resBoard = Array(repeating: Float32(0), count: 64)
+            for i in 0..<64{
+                resBoard[i] = coreMLResult[i] as! Float32
             }
-            print(res_board)
-            return 11
+            return resBoard
         }
     }
-    static func thinkNextMove(_ board: [State], completion: (Int) -> Void) {
+    struct ReversiPredictionDecoder {
+        static func descode(_ prediction: [Float32]) -> Int {
+            let enumerated = prediction.enumerated().map { (index: $0.0,value: $0.1) }
+            let sorted = enumerated.sorted {$0.value > $1.value }
+            return sorted[0].index
+        }
+    }
+    static func predict(_ board: [State], completion: ([Float32]) -> Void) {
         let model = reversi()
         let mlArray = boardConverter.convert(board)
         let inputToModel: reversiInput = reversiInput(permute_2_input: mlArray)
