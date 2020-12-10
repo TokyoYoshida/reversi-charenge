@@ -322,6 +322,14 @@
                                     <constraint firstAttribute="width" secondItem="R41-rv-jVa" secondAttribute="height" multiplier="1:1" id="qSA-nO-sI2"/>
                                 </constraints>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VRw-jH-v4L">
+                                <rect key="frame" x="166" y="730" width="41" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="AI Put"/>
+                                <connections>
+                                    <action selector="tappedAIPut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="e2H-De-x8E"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>

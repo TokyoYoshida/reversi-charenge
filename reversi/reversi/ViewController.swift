@@ -50,9 +50,11 @@ class ViewController: UIViewController {
         }
         turn += 1
         sender.setTitle("●", for: .normal)
-        putByAI()
     }
     
+    @IBAction func tappedAIPut(_ sender: Any) {
+        putByAI()
+    }
     func putByAI() {
         BetaReversi.predict(state) {
             (predict) in
