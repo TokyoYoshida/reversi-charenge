@@ -54,18 +54,20 @@ class ViewController: UIViewController {
     }
     
     func putByAI() {
-        var nextMove = BetaReversi.thinkNextMove(board: state)
-
-        for stack in board.subviews {
-            for button in stack.subviews {
-                if nextMove == 0 {
-                    let b = button as! UIButton
-                    state[nextMove] = .pointWhite
-                    b.setTitle("●", for: .normal)
-                    b.setTitleColor(.white, for: .normal)
-                    return
+        var nextMove = BetaReversi.thinkNextMove(state) {
+            (move) in
+            var nextMove = move
+            for stack in board.subviews {
+                for button in stack.subviews {
+                    if nextMove == 0 {
+                        let b = button as! UIButton
+                        state[nextMove] = .pointWhite
+                        b.setTitle("●", for: .normal)
+                        b.setTitleColor(.white, for: .normal)
+                        return
+                    }
+                    nextMove -= 1
                 }
-                nextMove -= 1
             }
         }
     }
