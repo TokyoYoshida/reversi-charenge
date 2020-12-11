@@ -8,7 +8,7 @@
 import Foundation
 import CoreML
 
-struct BetaReversi {
+struct BetaReversi: ReversiStrategy {
     struct boardConverter {
         static func convert(_ board: [State]) -> MLMultiArray {
             func put(_ array: MLMultiArray, _ index: Int, _ targetState: State) {
@@ -100,7 +100,8 @@ struct BetaReversi {
             return nil
         }
     }
-    static func predict(_ board: [State], completion: ([Float32]) -> Void)  {
+
+    func predict(_ board: [State], completion: ([Float32]) -> Void)  {
         let model = try reversi()
         let mlArray = boardConverter.convert(board)
         let inputToModel: reversiInput = reversiInput(permute_2_input: mlArray)
