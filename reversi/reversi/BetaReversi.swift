@@ -41,10 +41,13 @@ struct BetaReversi {
     }
     struct ReversiPredictionDecoder {
         static func descode(_ prediction: [Float32], _ board: [State]) -> Int {
+            func canPut(_ index: Int) -> Bool {
+                return board[index] == .pointNone
+            }
             let enumerated = prediction.enumerated().map { (index: $0.0,value: $0.1) }
             let sorted = enumerated.sorted {$0.value > $1.value }
             for i in 0..<64 {
-                if board[sorted[i].index] == .pointNone {
+                if canPut(sorted[i].index) {
                     return sorted[i].index
                 }
             }
