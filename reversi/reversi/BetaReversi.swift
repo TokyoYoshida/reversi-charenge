@@ -52,14 +52,11 @@ struct BetaReversi {
                 guard case 0..<64 = index + direction else {
                     return false
                 }
-                let baserow = calcRow(index)
                 let basecol = calcCol(index)
-                let minCol = baserow * 8
-                let maxCol = minCol + 7
                 let nextcol = calcCol(index + direction)
 
                 if nextcol != basecol {
-                    return basecol != minCol && basecol != maxCol
+                    return basecol != 0 && basecol != 7
                 }
                 return true
             }
