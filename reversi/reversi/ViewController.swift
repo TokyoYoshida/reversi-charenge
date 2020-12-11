@@ -60,11 +60,11 @@ class ViewController: UIViewController {
             (predict) in
             var nextMove = BetaReversi.ReversiPredictionDecoder.descode(predict, state)
             print(nextMove)
+            state[nextMove] = .pointWhite
             for stack in board.subviews {
                 for button in stack.subviews {
                     if nextMove == 0 {
                         let b = button as! UIButton
-                        state[nextMove] = .pointWhite
                         b.setTitle("●", for: .normal)
                         b.setTitleColor(.white, for: .normal)
                         return

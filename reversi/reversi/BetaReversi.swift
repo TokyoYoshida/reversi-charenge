@@ -26,14 +26,15 @@ struct BetaReversi {
             put(mlArray, 0, .pointWhite)
             put(mlArray, 1, .pointBlack)
             print(ReversiModelDecoder.decode(mlArray))
+            print(ReversiModelDecoder.decode(mlArray, offset: 64))
             return mlArray
         }
     }
     struct ReversiModelDecoder {
-        static func decode(_ coreMLResult: MLMultiArray) -> [Float32] {
-            var resBoard = Array(repeating: Float32(0), count: 64)
-            for i in 0..<64{
-                resBoard[i] = coreMLResult[i] as! Float32
+        static func decode(_ coreMLResult: MLMultiArray, offset: Int = 0) -> [Float32] {
+            var resBoard = Array(repeating: Float32(0), count: 64*2)
+            for i in 0..<64 {
+                resBoard[i] = coreMLResult[i + offset] as! Float32
             }
             return resBoard
         }
@@ -43,7 +44,7 @@ struct BetaReversi {
             let enumerated = prediction.enumerated().map { (index: $0.0,value: $0.1) }
             let sorted = enumerated.sorted {$0.value > $1.value }
             for i in 0..<64 {
-                if board[i] == .pointNone {
+                if board[sorted[i].index] == .pointNone {
                     return sorted[i].index
                 }
             }
