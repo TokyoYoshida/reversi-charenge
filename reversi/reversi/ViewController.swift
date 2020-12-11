@@ -41,15 +41,16 @@ class ViewController: UIViewController {
         case .pointNone:
             sender.setTitleColor(.black, for: .normal)
             state[sender.tag] = .pointBlack
+            sender.setTitle("●", for: .normal)
         case .pointBlack:
             sender.setTitleColor(.white, for: .normal)
             state[sender.tag] = .pointWhite
+            sender.setTitle("●", for: .normal)
         case .pointWhite:
-            sender.setTitleColor(.black, for: .normal)
-            state[sender.tag] = .pointBlack
+            state[sender.tag] = .pointNone
+            sender.setTitle("", for: .normal)
         }
         turn += 1
-        sender.setTitle("●", for: .normal)
     }
     
     @IBAction func tappedAIPut(_ sender: Any) {
