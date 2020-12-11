@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 
     var turn: Int = 0
     var state: [State] = []
-    let strategy = BetaReversi()
+    let strategy = MinmaxReversi()
     @IBOutlet weak var board: UIStackView!
     override func viewDidLoad() {
         super.viewDidLoad()

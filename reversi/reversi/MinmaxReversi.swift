@@ -28,6 +28,12 @@ class ReversiModel: NSObject, GKGameModel {
         Player(playerId: 1),
         Player(playerId: 2)
     ]
+    var board: [State] = []
+    var currentPlayer = 0
+    
+    func updateState(_ board: [State]) {
+        self.board = board
+    }
 
     func score(for player: GKGameModelPlayer) -> Int {
         return 1
@@ -38,19 +44,21 @@ class ReversiModel: NSObject, GKGameModel {
     }
     
     var activePlayer: GKGameModelPlayer? {
-        return _players.last
+        return _players[currentPlayer]
     }
     
     func setGameModel(_ gameModel: GKGameModel) {
     }
     
     func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
-        let ar = Array(repeating: Int(1), count: 64)
+        currentPlayer = 1 - currentPlayer
+        let ar = Array(0..<64)
         let upd = ar.map { Update($0) }
         return upd
     }
     
     func apply(_ gameModelUpdate: GKGameModelUpdate) {
+        board[gameModelUpdate.value] = .pointBlack
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
@@ -60,11 +68,13 @@ class ReversiModel: NSObject, GKGameModel {
 
 struct MinmaxReversi: ReversiStrategy {
     let strategist = GKMinmaxStrategist()
+    let gameModel = ReversiModel()
     init() {
-        strategist.gameModel = ReversiModel()
+        strategist.gameModel = gameModel
         strategist.maxLookAheadDepth = 3
     }
     func predict(_ board: [State], completion: (Int?) -> Void) {
+        gameModel.updateState(board)
         let result = strategist.bestMoveForActivePlayer()
         print(result)
         completion(result?.value)
