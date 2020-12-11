@@ -56,7 +56,11 @@ struct BetaReversi {
                 let nextcol = calcCol(index + direction)
 
                 if nextcol != basecol {
-                    return basecol != 0 && basecol != 7
+                    if direction > 0 {
+                        return basecol != 7
+                    } else {
+                        return basecol != 0
+                    }
                 }
                 return true
             }
