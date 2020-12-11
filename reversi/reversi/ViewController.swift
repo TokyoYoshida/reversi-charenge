@@ -11,6 +11,7 @@ enum State {
     case pointBlack
     case pointWhite
 }
+
 class ViewController: UIViewController {
 
     var turn: Int = 0
@@ -36,16 +37,47 @@ class ViewController: UIViewController {
     
     @objc func tapButton(_ sender: UIButton) {
         print("@@@" + sender.tag.description)
-        if state[sender.tag] == .pointNone {
-            if turn % 2 == 0 {
-                sender.setTitleColor(.white, for: .normal)
-                state[sender.tag] = .pointWhite
-            } else {
-                sender.setTitleColor(.black, for: .normal)
-                state[sender.tag] = .pointBlack
-            }
-            turn += 1
+        switch state[sender.tag] {
+        case .pointNone:
+            sender.setTitleColor(.black, for: .normal)
+            state[sender.tag] = .pointBlack
             sender.setTitle("●", for: .normal)
+        case .pointBlack:
+            sender.setTitleColor(.white, for: .normal)
+            state[sender.tag] = .pointWhite
+            sender.setTitle("●", for: .normal)
+        case .pointWhite:
+            state[sender.tag] = .pointNone
+            sender.setTitle("", for: .normal)
+        }
+        turn += 1
+    }
+    
+    @IBAction func tappedAIPut(_ sender: Any) {
+        putByAI()
+    }
+    func putByAI() {
+        BetaReversi.predict(state) {
+            (predict) in
+            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, state, .pointWhite)
+            if result == nil {
+                print("pass")
+                return
+            }
+            var nextMove = result!
+            print(nextMove)
+            state[nextMove] = .pointWhite
+            for stack in board.subviews {
+                for button in stack.subviews {
+                    if nextMove == 0 {
+                        let b = button as! UIButton
+                        b.setTitle("●", for: .normal)
+                        b.setTitleColor(.white, for: .normal)
+                        return
+                    }
+                    nextMove -= 1
+                }
+            }
         }
     }
 }
