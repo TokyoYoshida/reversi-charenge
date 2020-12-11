@@ -58,7 +58,12 @@ class ViewController: UIViewController {
     func putByAI() {
         BetaReversi.predict(state) {
             (predict) in
-            var nextMove = BetaReversi.ReversiPredictionDecoder.descode(predict, state)
+            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, state, .pointWhite)
+            if result == nil {
+                print("pass")
+                return
+            }
+            var nextMove = result!
             print(nextMove)
             state[nextMove] = .pointWhite
             for stack in board.subviews {
