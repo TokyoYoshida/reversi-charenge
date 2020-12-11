@@ -42,20 +42,38 @@ struct BetaReversi {
     struct ReversiPredictionDecoder {
         static let directions = [-9, -8, -7, -1, 1, 7, 8, 9]
         static func descode(_ prediction: [Float32], _ board: [State], _ ownState: State) -> Int? {
-            func isinBoard(_ index: Int) -> Bool {
-                return index >= 0 && index < 64
+            func isinBoard(_ index: Int, _ direction: Int) -> Bool {
+                func calcRow( _ index: Int) -> Int {
+                    return index / 8
+                }
+                func calcCol(_ index: Int) -> Int {
+                    return index - calcRow(index) * 8
+                }
+                guard case 0..<64 = index + direction else {
+                    return false
+                }
+                let baserow = calcRow(index)
+                let basecol = calcCol(index)
+                let minCol = baserow * 8
+                let maxCol = minCol + 7
+                let nextcol = calcCol(index + direction)
+
+                if nextcol != basecol {
+                    return basecol != minCol && basecol != maxCol
+                }
+                return true
             }
             func canPutToDirection(_ index: Int, _ direction: Int) -> Bool {
                 var i = index
-                i += direction
-                while isinBoard(i) {
+                while isinBoard(i, direction) {
+                    i += direction
                     switch board[i] {
                     case ownState:
                         return abs(i - index) > abs(direction)
                     case .pointNone:
                         return false
                     default: // is enemy
-                        i += direction
+                        break
                     }
                 }
                 return false
