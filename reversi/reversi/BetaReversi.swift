@@ -101,13 +101,14 @@ struct BetaReversi: ReversiStrategy {
         }
     }
 
-    func predict(_ board: [State], completion: ([Float32]) -> Void)  {
+    func predict(_ board: [State], completion: (Int?) -> Void)  {
         let model = try reversi()
         let mlArray = boardConverter.convert(board)
         let inputToModel: reversiInput = reversiInput(permute_2_input: mlArray)
         if let prediction = try? model.prediction(input: inputToModel) {
             let resArray = try? prediction.Identity
-            let result = ReversiModelDecoder.decode(resArray!)
+            let results = ReversiModelDecoder.decode(resArray!)
+            let result = BetaReversi.ReversiPredictionDecoder.descode(results, board, .pointWhite)
             completion(result)
         }
     }

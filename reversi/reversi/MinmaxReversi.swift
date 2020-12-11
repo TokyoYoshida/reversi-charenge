@@ -16,19 +16,38 @@ class Player: NSObject, GKGameModelPlayer {
 }
 
 class Update: NSObject, GKGameModelUpdate {
-    var value = 10
+    var value: Int
+    init(_ value: Int) {
+        self.value = value
+    }
 }
 
 class ReversiModel: NSObject, GKGameModel {
-    var players: [GKGameModelPlayer]?
+    let aiStrategy = BetaReversi()
+    let _players: [GKGameModelPlayer] = [
+        Player(playerId: 1),
+        Player(playerId: 2)
+    ]
+
+    func score(for player: GKGameModelPlayer) -> Int {
+        return 1
+    }
+
+    var players: [GKGameModelPlayer]? {
+        return _players
+    }
     
-    var activePlayer: GKGameModelPlayer?
+    var activePlayer: GKGameModelPlayer? {
+        return _players.last
+    }
     
     func setGameModel(_ gameModel: GKGameModel) {
     }
     
     func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
-        return [Update()]
+        let ar = Array(repeating: Int(1), count: 64)
+        let upd = ar.map { Update($0) }
+        return upd
     }
     
     func apply(_ gameModelUpdate: GKGameModelUpdate) {
@@ -45,10 +64,9 @@ struct MinmaxReversi: ReversiStrategy {
         strategist.gameModel = ReversiModel()
         strategist.maxLookAheadDepth = 3
     }
-    func predict(_ board: [State], completion: ([Float32]) -> Void) {
+    func predict(_ board: [State], completion: (Int?) -> Void) {
         let result = strategist.bestMoveForActivePlayer()
         print(result)
-        let array = Array(repeating: Float32(1), count: 64)
-        completion(array)
+        completion(result?.value)
     }
 }

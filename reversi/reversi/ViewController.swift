@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 
     var turn: Int = 0
     var state: [State] = []
-    let strategy = MinmaxReversi()
+    let strategy = BetaReversi()
     @IBOutlet weak var board: UIStackView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,8 +59,7 @@ class ViewController: UIViewController {
     }
     func putByAI() {
         strategy.predict(state) {
-            (predict) in
-            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, state, .pointWhite)
+            (result) in
             if result == nil {
                 print("pass")
                 return
