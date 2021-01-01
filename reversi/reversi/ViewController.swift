@@ -60,7 +60,8 @@ class ViewController: UIViewController {
     }
     func putByAI() {
         strategy.predict(state) {
-            (result) in
+            (predict) in
+            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, state, .pointWhite)
             if result == nil {
                 print("pass")
                 return

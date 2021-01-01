@@ -101,15 +101,14 @@ struct BetaReversi: ReversiStrategy {
         }
     }
 
-    func predict(_ board: [State], completion: (Int?) -> Void)  {
+    func predict(_ board: [State], completion: ([Float32]) -> Void)  {
         let model = try reversi()
         let mlArray = boardConverter.convert(board)
         let inputToModel: reversiInput = reversiInput(permute_input: mlArray)
         if let prediction = try? model.prediction(input: inputToModel) {
             let resArray = try? prediction.Identity
             let results = ReversiModelDecoder.decode(resArray!)
-            let result = BetaReversi.ReversiPredictionDecoder.descode(results, board, .pointWhite)
-            completion(result)
+            completion(results)
         }
     }
 }
@@ -117,9 +116,14 @@ struct BetaReversi: ReversiStrategy {
 struct BlockingBetaReversi: BlockingReversiStrategy {
     let strategy = BetaReversi()
     func predict(_ board: [State]) -> [Int] {
+        strategy.predict(board) {
+            (predict) in
+            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, board, .pointWhite)
+            if result == nil {
+                print("pass")
+                return
+            }
+        }
         return [1]
-//        strategy.predict(board) { result in
-//
-//        }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ReversiStrategy {
-    func predict(_ board: [State], completion: (Int?) -> Void)
+    func predict(_ board: [State], completion: ([Float32]) -> Void)
 }
 
 protocol BlockingReversiStrategy {

@@ -23,6 +23,7 @@ class Update: NSObject, GKGameModelUpdate {
 }
 
 class ReversiModel: NSObject, GKGameModel {
+    let strategy = BlockingBetaReversi()
     let aiStrategy = BetaReversi()
     let _players: [GKGameModelPlayer] = [
         Player(playerId: 1),
@@ -100,10 +101,13 @@ struct MinmaxReversi: ReversiStrategy {
         strategist.gameModel = gameModel
         strategist.maxLookAheadDepth = 3
     }
-    func predict(_ board: [State], completion: (Int?) -> Void) {
+    func predict(_ board: [State], completion: ([Float32]) -> Void) {
         gameModel.updateState(board)
-        let result = strategist.bestMoveForActivePlayer()
-        print(result)
-        completion(result?.value)
+        var resBoard = Array(repeating: Float32(0), count: 64*2)
+        if let result = strategist.bestMoveForActivePlayer() {
+            print(result)
+            resBoard[result.value] = 1
+        }
+        completion(resBoard)
     }
 }
