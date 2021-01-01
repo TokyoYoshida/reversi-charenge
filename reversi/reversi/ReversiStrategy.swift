@@ -10,3 +10,7 @@ import Foundation
 protocol ReversiStrategy {
     func predict(_ board: [State], completion: (Int?) -> Void)
 }
+
+protocol BlockingReversiStrategy {
+    func predict(_ board: [State]) -> [Int]
+}

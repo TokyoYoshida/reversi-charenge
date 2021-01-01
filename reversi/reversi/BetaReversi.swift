@@ -113,3 +113,13 @@ struct BetaReversi: ReversiStrategy {
         }
     }
 }
+
+struct BlockingBetaReversi: BlockingReversiStrategy {
+    let strategy = BetaReversi()
+    func predict(_ board: [State]) -> [Int] {
+        return [1]
+//        strategy.predict(board) { result in
+//
+//        }
+    }
+}
