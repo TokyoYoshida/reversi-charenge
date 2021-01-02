@@ -63,7 +63,9 @@ class ReversiModel: NSObject, GKGameModel {
         assert(predict.count == 64, "wrong range.")
         let eval = BetaReversi.ReversiPredictionDecoder.eval(predict, board, targetPlayer)
         //        printState()
-        return Int(floor(eval*100))
+//        print(Int(floor(eval*100)))
+        let res = Int(floor(eval*100))
+        return res < 64 ? res : 63
     }
 
     var players: [GKGameModelPlayer]? {
