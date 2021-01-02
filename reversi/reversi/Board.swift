@@ -65,26 +65,47 @@ class Board {
     }
 
     func isinBoard(_ index: Int, _ direction: Int) -> Bool {
+        func getColumnIncreaseInDirection(_ direction: Int) -> Int {
+            switch direction {
+            case -9, -1 ,7:
+                return -1
+            case -7 ,1, 9:
+                return 1
+            case -8 ,8:
+                return 0
+            default:
+                assertionFailure("wrong direction")
+                return 0
+            }
+        }
         func calcRow( _ index: Int) -> Int {
             return index / 8
         }
         func calcCol(_ index: Int) -> Int {
             return index - calcRow(index) * 8
         }
-        guard case 0..<64 = index + direction else {
+        func checkByRow() -> Bool {
+            if case 0..<64 = index + direction {
+                return true
+            }
             return false
         }
-        let basecol = calcCol(index)
-        let nextcol = calcCol(index + direction)
+        func checkByCol() -> Bool {
+            let basecol = calcCol(index)
 
-        if nextcol != basecol {
-            if nextcol > basecol {
+            switch getColumnIncreaseInDirection(direction) {
+            case 1:
                 return basecol != 7
-            } else {
+            case -1:
                 return basecol != 0
+            case 0:
+                return true
+            default:
+                assertionFailure("wrong direction")
+                return false
             }
         }
-        return true
+        return checkByRow() && checkByCol()
     }
 
     func canPutToDirection(_ ownState: State, _ index: Int, _ direction: Int) -> Bool {
