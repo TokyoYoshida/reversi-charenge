@@ -27,13 +27,12 @@ struct BetaReversi: ReversiStrategy {
             put(mlArray, 0, targetPlayer)
             put(mlArray, 1, targetPlayer.opponent)
             print(ReversiModelDecoder.decode(mlArray))
-            print(ReversiModelDecoder.decode(mlArray, offset: 64))
             return mlArray
         }
     }
     struct ReversiModelDecoder {
         static func decode(_ coreMLResult: MLMultiArray, offset: Int = 0) -> [Float32] {
-            var resBoard = Array(repeating: Float32(0), count: 64*2)
+            var resBoard = Array(repeating: Float32(0), count: 64)
             for i in 0..<64 {
                 resBoard[i] = coreMLResult[i + offset] as! Float32
             }
@@ -42,7 +41,7 @@ struct BetaReversi: ReversiStrategy {
     }
     struct ReversiPredictionDecoder {
         static let directions = [-9, -8, -7, -1, 1, 7, 8, 9]
-        static func filter(_ prediction: [Float32], _ board: [State], _ ownState: State) -> [(index: Int, value: Float32)] {
+        static func sorted(_ prediction: [Float32], _ board: [State], _ ownState: State) -> [(index: Int, value: Float32)] {
             func isinBoard(_ index: Int, _ direction: Int) -> Bool {
                 func calcRow( _ index: Int) -> Int {
                     return index / 8
@@ -91,6 +90,7 @@ struct BetaReversi: ReversiStrategy {
                 }
                 return false
             }
+            assert(prediction.count == 64, "wrong range.")
             let enumerated = prediction.enumerated().map { (index: $0.0,value: $0.1) }
             let sorted = enumerated.sorted {$0.value > $1.value }
             var results: [(Int, Float32)] = []
@@ -103,12 +103,12 @@ struct BetaReversi: ReversiStrategy {
         }
 
         static func decode(_ prediction: [Float32], _ board: [State], _ ownState: State) -> [Int] {
-            let filtered = filter(prediction, board, ownState)
+            let filtered = sorted(prediction, board, ownState)
             return filtered.map {$0.index}
         }
 
         static func eval(_ prediction: [Float32], _ board: [State], _ ownState: State) -> Float32 {
-            let filtered = filter(prediction, board, ownState)
+            let filtered = sorted(prediction, board, ownState)
             if filtered.isEmpty {
                 return -1
             }

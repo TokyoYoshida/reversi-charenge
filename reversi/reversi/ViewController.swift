@@ -72,6 +72,7 @@ class ViewController: UIViewController {
     func putByAI() {
         strategy.predict(state, .pointWhite) {
             (predict) in
+            assert(predict.count == 64, "wrong range.")
             let results = BetaReversi.ReversiPredictionDecoder.decode(predict, state, .pointWhite)
             if results.isEmpty {
                 print("pass")

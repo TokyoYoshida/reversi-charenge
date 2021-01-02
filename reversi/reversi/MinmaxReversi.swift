@@ -60,6 +60,7 @@ class ReversiModel: NSObject, GKGameModel {
     func score(for player: GKGameModelPlayer) -> Int {
         let player = currentPlayer == 0 ? targetPlayer : targetPlayer.opponent
         let predict = strategy.predict(board, player)
+        assert(predict.count == 64, "wrong range.")
         let eval = BetaReversi.ReversiPredictionDecoder.eval(predict, board, targetPlayer)
         //        printState()
         return Int(floor(eval*100))
@@ -78,11 +79,11 @@ class ReversiModel: NSObject, GKGameModel {
             updateState(model.board, model.targetPlayer)
         }
     }
-    
-    
+        
     func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
         let player = currentPlayer == 0 ? targetPlayer : targetPlayer.opponent
         let predict = strategy.predict(board, player)
+        assert(predict.count == 64, "wrong range.")
         let moves = BetaReversi.ReversiPredictionDecoder.decode(predict, board, targetPlayer)
         let upd = moves.map { Update($0) }
         return upd
@@ -113,8 +114,8 @@ struct MinmaxReversi: ReversiStrategy {
     }
     func predict(_ board: [State],  _ targetPlayer: State, completion: ([Float32]) -> Void) {
         gameModel.updateState(board, targetPlayer)
-        var resBoard = Array(repeating: Float32(0), count: 64*2)
-        if let result = strategist.bestMoveForActivePlayer(), result.value > 0 {
+        var resBoard = Array(repeating: Float32(0), count: 64)
+        if let result = strategist.bestMoveForActivePlayer() {
             print(result)
             resBoard[result.value] = 1
         }
