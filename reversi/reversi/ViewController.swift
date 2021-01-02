@@ -56,17 +56,22 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tappedAIPut(_ sender: Any) {
-        putByAI()
+        let b = BlockingBetaReversi()
+        let res = b.predict(state)
+        print("result!")
+        print(res)
+        return
+//        putByAI()
     }
     func putByAI() {
         strategy.predict(state) {
             (predict) in
-            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, state, .pointWhite)
-            if result == nil {
+            let results = BetaReversi.ReversiPredictionDecoder.decode(predict, state, .pointWhite)
+            if results.isEmpty {
                 print("pass")
                 return
             }
-            var nextMove = result!
+            var nextMove = results[0]
             print(nextMove)
             state[nextMove] = .pointWhite
             for stack in board.subviews {

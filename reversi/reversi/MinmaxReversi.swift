@@ -34,8 +34,6 @@ class ReversiModel: NSObject, GKGameModel {
     
     func printState() {
         guard board.count == 64 else {return}
-        let current = currentPlayer == 0 ? "black" : "white"
-        print("current player: \(current)")
         for row in 0..<8 {
             var str = ""
             for col in 0..<8 {
@@ -58,6 +56,7 @@ class ReversiModel: NSObject, GKGameModel {
     }
 
     func score(for player: GKGameModelPlayer) -> Int {
+        printState()
         return 2
     }
 
@@ -70,27 +69,31 @@ class ReversiModel: NSObject, GKGameModel {
     }
     
     func setGameModel(_ gameModel: GKGameModel) {
+        if let model = gameModel as? ReversiModel{
+            updateState(model.board)
+        }
     }
     
+    
     func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
-        let ar = Array(1..<3)
+        let ar = [1,2,3]
         let upd = ar.map { Update($0) }
         return upd
     }
     
     func apply(_ gameModelUpdate: GKGameModelUpdate) {
         let value: State = currentPlayer == 0 ? .pointBlack : .pointWhite
+        let current = currentPlayer == 0 ? "black" : "white"
+        print("current player: \(current)")
         print("update value = \(gameModelUpdate.value)")
         board[gameModelUpdate.value] = value
-        printState()
         currentPlayer = 1 - currentPlayer
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
-        return self
-//        let copy = ReversiModel()
-//        copy.updateState(board)
-//        return copy
+        let copy = ReversiModel()
+        copy.setGameModel(self)
+        return copy
     }
 }
     

@@ -41,7 +41,7 @@ struct BetaReversi: ReversiStrategy {
     }
     struct ReversiPredictionDecoder {
         static let directions = [-9, -8, -7, -1, 1, 7, 8, 9]
-        static func descode(_ prediction: [Float32], _ board: [State], _ ownState: State) -> Int? {
+        static func decode(_ prediction: [Float32], _ board: [State], _ ownState: State) -> [Int] {
             func isinBoard(_ index: Int, _ direction: Int) -> Bool {
                 func calcRow( _ index: Int) -> Int {
                     return index / 8
@@ -92,12 +92,13 @@ struct BetaReversi: ReversiStrategy {
             }
             let enumerated = prediction.enumerated().map { (index: $0.0,value: $0.1) }
             let sorted = enumerated.sorted {$0.value > $1.value }
+            var results: [Int] = []
             for i in 0..<64 {
                 if canPut(sorted[i].index) {
-                    return sorted[i].index
+                    results.append(sorted[i].index)
                 }
             }
-            return nil
+            return results
         }
     }
 
@@ -114,16 +115,19 @@ struct BetaReversi: ReversiStrategy {
 }
 
 struct BlockingBetaReversi: BlockingReversiStrategy {
+    class Box {
+        var moves: [Int] = []
+    }
     let strategy = BetaReversi()
     func predict(_ board: [State]) -> [Int] {
+        let semaphore  = DispatchSemaphore(value: 0)
+        let resultBox = Box()
         strategy.predict(board) {
             (predict) in
-            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, board, .pointWhite)
-            if result == nil {
-                print("pass")
-                return
-            }
+            resultBox.moves = BetaReversi.ReversiPredictionDecoder.decode(predict, board, .pointWhite)
+            semaphore.signal()
         }
-        return [1]
+        semaphore.wait()
+        return resultBox.moves
     }
 }
