@@ -78,7 +78,7 @@ class Board {
         let nextcol = calcCol(index + direction)
 
         if nextcol != basecol {
-            if direction > 0 {
+            if nextcol > basecol {
                 return basecol != 7
             } else {
                 return basecol != 0
