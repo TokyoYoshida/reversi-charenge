@@ -11,6 +11,17 @@ enum State {
     case pointNone
     case pointBlack
     case pointWhite
+    var opponent: State {
+        switch self {
+        case .pointWhite:
+            return .pointBlack
+        case .pointBlack:
+            return .pointWhite
+        case .pointNone:
+            assertionFailure("This condition is not expected")
+            return .pointNone
+        }
+    }
 }
 
 class ViewController: UIViewController {
@@ -56,15 +67,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tappedAIPut(_ sender: Any) {
-        let b = BlockingBetaReversi()
-        let res = b.predict(state)
-        print("result!")
-        print(res)
-        return
-//        putByAI()
+        putByAI()
     }
     func putByAI() {
-        strategy.predict(state) {
+        strategy.predict(state, .pointWhite) {
             (predict) in
             let results = BetaReversi.ReversiPredictionDecoder.decode(predict, state, .pointWhite)
             if results.isEmpty {

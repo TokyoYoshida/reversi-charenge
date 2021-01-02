@@ -31,6 +31,7 @@ class ReversiModel: NSObject, GKGameModel {
     ]
     var board: [State] = []
     var currentPlayer = 0
+    var targetPlayer: State = .pointNone
     
     func printState() {
         guard board.count == 64 else {return}
@@ -51,13 +52,17 @@ class ReversiModel: NSObject, GKGameModel {
         print("----")
     }
 
-    func updateState(_ board: [State]) {
+    func updateState(_ board: [State], _ targetPlayer: State) {
         self.board = board
+        self.targetPlayer = targetPlayer
     }
 
     func score(for player: GKGameModelPlayer) -> Int {
-        printState()
-        return 2
+        let player = currentPlayer == 0 ? targetPlayer : targetPlayer.opponent
+        let predict = strategy.predict(board, player)
+        let eval = BetaReversi.ReversiPredictionDecoder.eval(predict, board, targetPlayer)
+        //        printState()
+        return Int(floor(eval*100))
     }
 
     var players: [GKGameModelPlayer]? {
@@ -70,14 +75,16 @@ class ReversiModel: NSObject, GKGameModel {
     
     func setGameModel(_ gameModel: GKGameModel) {
         if let model = gameModel as? ReversiModel{
-            updateState(model.board)
+            updateState(model.board, model.targetPlayer)
         }
     }
     
     
     func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
-        let ar = [1,2,3]
-        let upd = ar.map { Update($0) }
+        let player = currentPlayer == 0 ? targetPlayer : targetPlayer.opponent
+        let predict = strategy.predict(board, player)
+        let moves = BetaReversi.ReversiPredictionDecoder.decode(predict, board, targetPlayer)
+        let upd = moves.map { Update($0) }
         return upd
     }
     
@@ -104,10 +111,10 @@ struct MinmaxReversi: ReversiStrategy {
         strategist.gameModel = gameModel
         strategist.maxLookAheadDepth = 3
     }
-    func predict(_ board: [State], completion: ([Float32]) -> Void) {
-        gameModel.updateState(board)
+    func predict(_ board: [State],  _ targetPlayer: State, completion: ([Float32]) -> Void) {
+        gameModel.updateState(board, targetPlayer)
         var resBoard = Array(repeating: Float32(0), count: 64*2)
-        if let result = strategist.bestMoveForActivePlayer() {
+        if let result = strategist.bestMoveForActivePlayer(), result.value > 0 {
             print(result)
             resBoard[result.value] = 1
         }

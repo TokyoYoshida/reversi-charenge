@@ -10,7 +10,7 @@ import CoreML
 
 struct BetaReversi: ReversiStrategy {
     struct boardConverter {
-        static func convert(_ board: [State]) -> MLMultiArray {
+        static func convert(_ board: [State], _ targetPlayer: State) -> MLMultiArray {
             func put(_ array: MLMultiArray, _ index: Int, _ targetState: State) {
                 for j in 0..<8{
                     for k in 0..<8{
@@ -23,8 +23,9 @@ struct BetaReversi: ReversiStrategy {
                 }
             }
             let mlArray = try! MLMultiArray(shape: [1,2,8,8], dataType: .float32)
-            put(mlArray, 0, .pointWhite)
-            put(mlArray, 1, .pointBlack)
+            print("put \(targetPlayer)")
+            put(mlArray, 0, targetPlayer)
+            put(mlArray, 1, targetPlayer.opponent)
             print(ReversiModelDecoder.decode(mlArray))
             print(ReversiModelDecoder.decode(mlArray, offset: 64))
             return mlArray
@@ -41,7 +42,7 @@ struct BetaReversi: ReversiStrategy {
     }
     struct ReversiPredictionDecoder {
         static let directions = [-9, -8, -7, -1, 1, 7, 8, 9]
-        static func decode(_ prediction: [Float32], _ board: [State], _ ownState: State) -> [Int] {
+        static func filter(_ prediction: [Float32], _ board: [State], _ ownState: State) -> [(index: Int, value: Float32)] {
             func isinBoard(_ index: Int, _ direction: Int) -> Bool {
                 func calcRow( _ index: Int) -> Int {
                     return index / 8
@@ -92,19 +93,33 @@ struct BetaReversi: ReversiStrategy {
             }
             let enumerated = prediction.enumerated().map { (index: $0.0,value: $0.1) }
             let sorted = enumerated.sorted {$0.value > $1.value }
-            var results: [Int] = []
+            var results: [(Int, Float32)] = []
             for i in 0..<64 {
                 if canPut(sorted[i].index) {
-                    results.append(sorted[i].index)
+                    results.append(sorted[i])
                 }
             }
             return results
         }
+
+        static func decode(_ prediction: [Float32], _ board: [State], _ ownState: State) -> [Int] {
+            let filtered = filter(prediction, board, ownState)
+            return filtered.map {$0.index}
+        }
+
+        static func eval(_ prediction: [Float32], _ board: [State], _ ownState: State) -> Float32 {
+            let filtered = filter(prediction, board, ownState)
+            if filtered.isEmpty {
+                return -1
+            }
+            return filtered[0].value
+        }
     }
 
-    func predict(_ board: [State], completion: ([Float32]) -> Void)  {
+
+    func predict(_ board: [State], _ targetPlayer: State, completion: ([Float32]) -> Void)  {
         let model = try reversi()
-        let mlArray = boardConverter.convert(board)
+        let mlArray = boardConverter.convert(board, targetPlayer)
         let inputToModel: reversiInput = reversiInput(permute_input: mlArray)
         if let prediction = try? model.prediction(input: inputToModel) {
             let resArray = try? prediction.Identity
@@ -116,15 +131,15 @@ struct BetaReversi: ReversiStrategy {
 
 struct BlockingBetaReversi: BlockingReversiStrategy {
     class Box {
-        var moves: [Int] = []
+        var moves: [Float32] = []
     }
     let strategy = BetaReversi()
-    func predict(_ board: [State]) -> [Int] {
+    func predict(_ board: [State], _ targetPlayer: State) -> [Float32] {
         let semaphore  = DispatchSemaphore(value: 0)
         let resultBox = Box()
-        strategy.predict(board) {
+        strategy.predict(board, targetPlayer) {
             (predict) in
-            resultBox.moves = BetaReversi.ReversiPredictionDecoder.decode(predict, board, .pointWhite)
+            resultBox.moves = predict
             semaphore.signal()
         }
         semaphore.wait()
