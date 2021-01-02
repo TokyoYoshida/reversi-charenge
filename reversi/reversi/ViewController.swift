@@ -22,6 +22,17 @@ enum State {
             return .pointNone
         }
     }
+    
+    var description: String {
+        switch self {
+        case .pointWhite:
+            return "white"
+        case .pointBlack:
+            return "black"
+        case .pointNone:
+            return "none"
+        }
+    }
 }
 
 class ViewController: UIViewController {

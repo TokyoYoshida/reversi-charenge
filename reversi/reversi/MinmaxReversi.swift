@@ -22,6 +22,7 @@ class Update: NSObject, GKGameModelUpdate {
     }
 }
 
+var globalId = 0
 class ReversiModel: NSObject, GKGameModel {
     let strategy = BlockingBetaReversi()
     let aiStrategy = BetaReversi()
@@ -32,9 +33,11 @@ class ReversiModel: NSObject, GKGameModel {
     var board: [State] = []
     var currentPlayer = 0
     var targetPlayer: State = .pointNone
+    var id = 0
     
     func printState() {
         guard board.count == 64 else {return}
+        print("id = \(id)")
         for row in 0..<8 {
             var str = ""
             for col in 0..<8 {
@@ -62,10 +65,9 @@ class ReversiModel: NSObject, GKGameModel {
         let predict = strategy.predict(board, player)
         assert(predict.count == 64, "wrong range.")
         let eval = BetaReversi.ReversiPredictionDecoder.eval(predict, board, targetPlayer)
-        //        printState()
-//        print(Int(floor(eval*100)))
+        print("Score = \(Int(floor(eval*100)))")
         let res = Int(floor(eval*100))
-        return res < 64 ? res : 63
+        return 0..<64 ~= res ? res : 0
     }
 
     var players: [GKGameModelPlayer]? {
@@ -79,6 +81,7 @@ class ReversiModel: NSObject, GKGameModel {
     func setGameModel(_ gameModel: GKGameModel) {
         if let model = gameModel as? ReversiModel{
             updateState(model.board, model.targetPlayer)
+            self.currentPlayer = model.currentPlayer
         }
     }
         
@@ -92,17 +95,20 @@ class ReversiModel: NSObject, GKGameModel {
     }
     
     func apply(_ gameModelUpdate: GKGameModelUpdate) {
-        let value: State = currentPlayer == 0 ? .pointBlack : .pointWhite
-        let current = currentPlayer == 0 ? "black" : "white"
-        print("current player: \(current)")
+        let value: State = currentPlayer == 0 ? targetPlayer : targetPlayer.opponent
+        print("current player: \(value.description)")
         print("update value = \(gameModelUpdate.value)")
         board[gameModelUpdate.value] = value
+        printState()
         currentPlayer = 1 - currentPlayer
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
+        print("copy from id = \(id)")
         let copy = ReversiModel()
         copy.setGameModel(self)
+        globalId += 1
+        copy.id = globalId
         return copy
     }
 }

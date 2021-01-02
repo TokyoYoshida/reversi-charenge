@@ -23,7 +23,6 @@ struct BetaReversi: ReversiStrategy {
                 }
             }
             let mlArray = try! MLMultiArray(shape: [1,2,8,8], dataType: .float32)
-            print("put \(targetPlayer)")
             put(mlArray, 0, targetPlayer)
             put(mlArray, 1, targetPlayer.opponent)
             print(ReversiModelDecoder.decode(mlArray))
