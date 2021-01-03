@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -322,26 +322,36 @@
                                     <constraint firstAttribute="width" secondItem="R41-rv-jVa" secondAttribute="height" multiplier="1:1" id="qSA-nO-sI2"/>
                                 </constraints>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VRw-jH-v4L">
-                                <rect key="frame" x="166" y="730" width="41" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VRw-jH-v4L">
+                                <rect key="frame" x="186.5" y="730" width="41" height="30"/>
                                 <state key="normal" title="AI Put"/>
                                 <connections>
                                     <action selector="tappedAIPut:" destination="BYZ-38-t0r" eventType="touchUpInside" id="e2H-De-x8E"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FGV-jO-VA6" userLabel="Message">
+                                <rect key="frame" x="186.5" y="768.5" width="41.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="VRw-jH-v4L" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4wf-UX-JgU"/>
+                            <constraint firstItem="FGV-jO-VA6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="B4t-vz-klD"/>
+                            <constraint firstItem="FGV-jO-VA6" firstAttribute="top" secondItem="VRw-jH-v4L" secondAttribute="bottom" constant="8.5" id="Fq2-99-mt5"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Sna-by-PJi"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="m5K-Km-wEB"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="R41-rv-jVa" secondAttribute="trailing" constant="2" id="u2q-d8-qu6"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="FGV-jO-VA6" secondAttribute="bottom" constant="73" id="vWZ-th-41y"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="2" id="y5b-rh-yLr"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="board" destination="R41-rv-jVa" id="ZHt-hK-qhc"/>
+                        <outlet property="messageLabel" destination="FGV-jO-VA6" id="a8G-TX-qxv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -14,8 +14,11 @@ class ViewController: UIViewController {
     let _board = Board()
     let strategy = MinmaxReversi()
     @IBOutlet weak var board: UIStackView!
+    @IBOutlet weak var messageLabel: UILabel!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        clearScreen()
         renderState()
     }
     
@@ -45,7 +48,12 @@ class ViewController: UIViewController {
         }
     }
     
+    func clearScreen() {
+        messageLabel.text = ""
+    }
+    
     @objc func tapButton(_ sender: UIButton) {
+        clearScreen()
         print("@@@" + sender.tag.description)
         switch _board.getState(sender.tag) {
         case .pointNone:
@@ -60,6 +68,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tappedAIPut(_ sender: Any) {
+        clearScreen()
         putByAI()
     }
     func putByAI() {
@@ -68,7 +77,7 @@ class ViewController: UIViewController {
             assert(predict.count == 64, "wrong range.")
             let results = BetaReversi.ReversiPredictionDecoder.decode(predict, _board._state, .pointWhite)
             if results.isEmpty {
-                print("pass")
+                messageLabel.text = "Pass"
                 return
             }
             var nextMove = results[0]
