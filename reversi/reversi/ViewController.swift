@@ -7,67 +7,83 @@
 //
 
 import UIKit
-enum State {
-    case pointNone
-    case pointBlack
-    case pointWhite
-}
 
 class ViewController: UIViewController {
 
     var turn: Int = 0
-    var state: [State] = []
+    let _board = Board()
+    let strategy = MinmaxReversi()
     @IBOutlet weak var board: UIStackView!
+    @IBOutlet weak var messageLabel: UILabel!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        clearScreen()
+        renderState()
+    }
+    
+    func renderState() {
         var count = 0
         for stack in board.subviews {
             for button in stack.subviews {
-                state.append(.pointNone)
                 let b = button as! UIButton
                 b.tag = count
-                count += 1
-                b.setTitle("", for: .normal)
                 b.titleLabel?.font = UIFont.systemFont(ofSize: 48)
                 b.backgroundColor = UIColor.init(cgColor: CGColor(red: 0.0, green: 0.3, blue: 0.0, alpha: 1.0))
+                let state = _board.getState(b.tag)
+                switch state {
+                case .pointBlack:
+                    b.setTitleColor(.black, for: .normal)
+                    b.setTitle("●", for: .normal)
+                case .pointWhite:
+                    b.setTitleColor(.white, for: .normal)
+                    b.setTitle("●", for: .normal)
+                case .pointNone:
+                    b.setTitle("", for: .normal)
+                    break
+                }
+                count += 1
                 b.addTarget(self, action: #selector(tapButton(_:)), for: .touchUpInside)
             }
         }
     }
     
+    func clearScreen() {
+        messageLabel.text = ""
+    }
+    
     @objc func tapButton(_ sender: UIButton) {
+        clearScreen()
         print("@@@" + sender.tag.description)
-        switch state[sender.tag] {
+        switch _board.getState(sender.tag) {
         case .pointNone:
-            sender.setTitleColor(.black, for: .normal)
-            state[sender.tag] = .pointBlack
-            sender.setTitle("●", for: .normal)
-        case .pointBlack:
-            sender.setTitleColor(.white, for: .normal)
-            state[sender.tag] = .pointWhite
-            sender.setTitle("●", for: .normal)
-        case .pointWhite:
-            state[sender.tag] = .pointNone
-            sender.setTitle("", for: .normal)
+            if _board.canPut(.pointBlack, sender.tag) {
+                _board.putWithReverse(sender.tag, .pointBlack)
+            }
+            renderState()
+        case .pointBlack, .pointWhite:
+            break
         }
         turn += 1
     }
     
     @IBAction func tappedAIPut(_ sender: Any) {
+        clearScreen()
         putByAI()
     }
     func putByAI() {
-        BetaReversi.predict(state) {
+        strategy.predict(_board._state, .pointWhite) {
             (predict) in
-            let result = BetaReversi.ReversiPredictionDecoder.descode(predict, state, .pointWhite)
-            if result == nil {
-                print("pass")
+            assert(predict.count == 64, "wrong range.")
+            let results = BetaReversi.ReversiPredictionDecoder.decode(predict, _board._state, .pointWhite)
+            if results.isEmpty {
+                messageLabel.text = "Pass"
                 return
             }
-            var nextMove = result!
+            var nextMove = results[0]
             print(nextMove)
-            state[nextMove] = .pointWhite
+            _board.putWithReverse(nextMove, .pointWhite)
+            renderState()
             for stack in board.subviews {
                 for button in stack.subviews {
                     if nextMove == 0 {
