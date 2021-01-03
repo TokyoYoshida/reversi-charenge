@@ -162,4 +162,33 @@ class Board {
         }
         return
     }
+    
+    func isWin(_ ownState: State) -> Bool {
+        func isAllStateComplete() -> Bool {
+            return _state.firstIndex(of: ownState.opponent) == nil
+        }
+        if isAllStateComplete() {
+            return true
+        }
+        return false
+    }
+
+    func printState() {
+        guard _state.count == 64 else {return}
+        for row in 0..<8 {
+            var str = ""
+            for col in 0..<8 {
+                switch _state[row*8 + col] {
+                case .pointBlack:
+                   str += "●"
+                case .pointWhite:
+                    str += "○"
+                case .pointNone:
+                    str += " "
+                }
+            }
+            print(str)
+        }
+        print("----")
+    }
 }
