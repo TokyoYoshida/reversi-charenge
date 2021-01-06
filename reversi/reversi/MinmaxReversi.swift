@@ -28,17 +28,26 @@ var globalId = 0
 class ReversiModel: NSObject, GKGameModel {
     let strategy = BlockingBetaReversi()
     let aiStrategy = BetaReversi()
-    let _players: [GKGameModelPlayer] = [
+    let _players: [Player] = [
         Player(playerId: 1),
         Player(playerId: 2)
     ]
     var board = Board()
-    var currentPlayerIndex = 0 // current player in the minmax tree
+    let targetPlayerIndex = 0
+    lazy var currentPlayerIndex = targetPlayerIndex // current player in the minmax tree
     var currentPlayer: State {
-        currentPlayerIndex == 0 ? targetPlayer : targetPlayer.opponent
+        currentPlayerIndex == targetPlayerIndex ? targetPlayer : targetPlayer.opponent
     }
     var targetPlayer: State = .pointNone // target player to predict
     var id = 0
+    
+    func convertPlayerToState(_ player: Player) -> State {
+        if player == _players[targetPlayerIndex] {
+            return targetPlayer
+        } else {
+            return targetPlayer.opponent
+        }
+    }
     
     func switchCurrentPlayer() {
         currentPlayerIndex = 1 - currentPlayerIndex
@@ -69,7 +78,7 @@ class ReversiModel: NSObject, GKGameModel {
     }
     
     func isWin(for player: GKGameModelPlayer) -> Bool {
-        board.isWin(currentPlayer)
+        board.isWin(convertPlayerToState(player as! Player))
     }
 
     var players: [GKGameModelPlayer]? {
