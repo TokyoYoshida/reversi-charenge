@@ -40,6 +40,10 @@ class ReversiModel: NSObject, GKGameModel {
     var targetPlayer: State = .pointNone
     var id = 0
     
+    func switchCurrentPlayer() {
+        currentPlayerIndex = 1 - currentPlayerIndex
+    }
+    
     func printState() {
         board.printState()
     }
@@ -96,7 +100,7 @@ class ReversiModel: NSObject, GKGameModel {
         print("update value = \(gameModelUpdate.value)")
         board.putWithReverse(gameModelUpdate.value, currentPlayer)
         printState()
-        currentPlayerIndex = 1 - currentPlayerIndex
+        switchCurrentPlayer()
     }
     
     func copy(with zone: NSZone? = nil) -> Any {
