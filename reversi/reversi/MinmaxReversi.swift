@@ -69,7 +69,7 @@ class ReversiModel: NSObject, GKGameModel {
     }
     
     func isWin(for player: GKGameModelPlayer) -> Bool {
-        board.isWin(targetPlayer)
+        board.isWin(currentPlayer)
     }
 
     var players: [GKGameModelPlayer]? {
