@@ -33,11 +33,11 @@ class ReversiModel: NSObject, GKGameModel {
         Player(playerId: 2)
     ]
     var board = Board()
-    var currentPlayerIndex = 0
+    var currentPlayerIndex = 0 // current player in the minmax tree
     var currentPlayer: State {
         currentPlayerIndex == 0 ? targetPlayer : targetPlayer.opponent
     }
-    var targetPlayer: State = .pointNone
+    var targetPlayer: State = .pointNone // target player to predict
     var id = 0
     
     func switchCurrentPlayer() {
