@@ -15,7 +15,12 @@ class ViewController: UIViewController {
     let strategy = MinmaxReversi()
     @IBOutlet weak var board: UIStackView!
     @IBOutlet weak var messageLabel: UILabel!
-
+    @IBOutlet weak var maintenanceSwitch: UISwitch!
+    
+    var maintenanceMode: Bool {
+        maintenanceSwitch.isOn
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         clearScreen()
@@ -53,18 +58,40 @@ class ViewController: UIViewController {
     }
     
     @objc func tapButton(_ sender: UIButton) {
-        clearScreen()
-        print("@@@" + sender.tag.description)
-        switch _board.getState(sender.tag) {
-        case .pointNone:
-            if _board.canPut(.pointBlack, sender.tag) {
-                _board.putWithReverse(sender.tag, .pointBlack)
+        func putToBoardIfNotMaintenanceMode() {
+            switch _board.getState(sender.tag) {
+            case .pointNone:
+                if _board.canPut(.pointBlack, sender.tag) {
+                    _board.putWithReverse(sender.tag, .pointBlack)
+                }
+                renderState()
+            case .pointBlack, .pointWhite:
+                break
+            }
+            turn += 1
+        }
+        func putToBoardIfMaintenanceMode() {
+            switch _board.getState(sender.tag) {
+            case .pointNone:
+                _board.putWithoutReverse(sender.tag, .pointBlack)
+            case .pointBlack:
+                _board.putWithoutReverse(sender.tag, .pointWhite)
+            case .pointWhite:
+                _board.putWithoutReverse(sender.tag, .pointBlack)
+                break
             }
             renderState()
-        case .pointBlack, .pointWhite:
-            break
         }
-        turn += 1
+        func putToBoard() {
+            if maintenanceMode {
+                putToBoardIfMaintenanceMode()
+            } else {
+                putToBoardIfNotMaintenanceMode()
+            }
+        }
+        clearScreen()
+        putToBoard()
+        print("@@@" + sender.tag.description)
     }
     
     @IBAction func tappedAIPut(_ sender: Any) {

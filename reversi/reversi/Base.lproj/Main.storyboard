@@ -338,7 +338,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N1N-JP-5TU">
                                 <rect key="frame" x="124" y="118" width="166" height="31"/>
                                 <subviews>
-                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dzs-Y3-rle">
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="dzs-Y3-rle">
                                         <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="maintenance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ik1-Bg-kqq">
@@ -376,6 +376,7 @@
                     </view>
                     <connections>
                         <outlet property="board" destination="R41-rv-jVa" id="ZHt-hK-qhc"/>
+                        <outlet property="maintenanceSwitch" destination="dzs-Y3-rle" id="19g-Sl-Uyj"/>
                         <outlet property="messageLabel" destination="FGV-jO-VA6" id="a8G-TX-qxv"/>
                     </connections>
                 </viewController>
