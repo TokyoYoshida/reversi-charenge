@@ -358,14 +358,39 @@
                                     <constraint firstItem="dzs-Y3-rle" firstAttribute="top" secondItem="N1N-JP-5TU" secondAttribute="top" id="YHe-fV-Vo1"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ngd-R4-Og8">
+                                <rect key="frame" x="156" y="169" width="102" height="31"/>
+                                <subviews>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="4kG-Ts-RDn">
+                                        <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="auto" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NgO-DI-Xfv">
+                                        <rect key="frame" x="68" y="5.5" width="34" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="NgO-DI-Xfv" firstAttribute="leading" secondItem="4kG-Ts-RDn" secondAttribute="trailing" constant="19" id="5qx-oW-OAN"/>
+                                    <constraint firstItem="4kG-Ts-RDn" firstAttribute="top" secondItem="Ngd-R4-Og8" secondAttribute="top" id="8cJ-xC-0hX"/>
+                                    <constraint firstItem="NgO-DI-Xfv" firstAttribute="centerY" secondItem="4kG-Ts-RDn" secondAttribute="centerY" id="9oP-SX-Dz2"/>
+                                    <constraint firstAttribute="trailing" secondItem="NgO-DI-Xfv" secondAttribute="trailing" id="A8k-v7-se3"/>
+                                    <constraint firstAttribute="bottom" secondItem="4kG-Ts-RDn" secondAttribute="bottom" id="PSw-6Z-gYp"/>
+                                    <constraint firstItem="4kG-Ts-RDn" firstAttribute="leading" secondItem="Ngd-R4-Og8" secondAttribute="leading" id="VKY-Xq-bgM"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Ngd-R4-Og8" firstAttribute="top" secondItem="N1N-JP-5TU" secondAttribute="bottom" constant="20" id="3xP-uh-lS7"/>
                             <constraint firstItem="VRw-jH-v4L" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4wf-UX-JgU"/>
                             <constraint firstItem="FGV-jO-VA6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="B4t-vz-klD"/>
                             <constraint firstItem="FGV-jO-VA6" firstAttribute="top" secondItem="VRw-jH-v4L" secondAttribute="bottom" constant="8.5" id="Fq2-99-mt5"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Sna-by-PJi"/>
+                            <constraint firstItem="Ngd-R4-Og8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="lll-pI-NQM"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="m5K-Km-wEB"/>
                             <constraint firstItem="N1N-JP-5TU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="nDw-26-LyD"/>
                             <constraint firstItem="N1N-JP-5TU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="74" id="tRd-fH-QI2"/>
@@ -375,8 +400,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="autoSwitch" destination="4kG-Ts-RDn" id="06U-n0-kDb"/>
                         <outlet property="board" destination="R41-rv-jVa" id="ZHt-hK-qhc"/>
-                        <outlet property="maintenanceSwitch" destination="dzs-Y3-rle" id="19g-Sl-Uyj"/>
+                        <outlet property="maintenanceSwitch" destination="dzs-Y3-rle" id="LzK-ox-wmJ"/>
                         <outlet property="messageLabel" destination="FGV-jO-VA6" id="a8G-TX-qxv"/>
                     </connections>
                 </viewController>

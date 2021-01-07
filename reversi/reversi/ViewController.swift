@@ -16,9 +16,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var board: UIStackView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var maintenanceSwitch: UISwitch!
+    @IBOutlet weak var autoSwitch: UISwitch!
     
     var maintenanceMode: Bool {
         maintenanceSwitch.isOn
+    }
+    
+    var autoMode: Bool {
+        autoSwitch.isOn
     }
     
     override func viewDidLoad() {
@@ -91,6 +96,9 @@ class ViewController: UIViewController {
         }
         clearScreen()
         putToBoard()
+        if autoMode {
+            putByAI()
+        }
         print("@@@" + sender.tag.description)
     }
     
