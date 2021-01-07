@@ -77,7 +77,7 @@ class ViewController: UIViewController {
             case .pointBlack:
                 _board.putWithoutReverse(sender.tag, .pointWhite)
             case .pointWhite:
-                _board.putWithoutReverse(sender.tag, .pointBlack)
+                _board.putWithoutReverse(sender.tag, .pointNone)
                 break
             }
             renderState()
