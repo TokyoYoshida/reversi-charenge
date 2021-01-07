@@ -335,6 +335,29 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N1N-JP-5TU">
+                                <rect key="frame" x="124" y="118" width="166" height="31"/>
+                                <subviews>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dzs-Y3-rle">
+                                        <rect key="frame" x="0.0" y="0.0" width="51" height="31"/>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="maintenance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ik1-Bg-kqq">
+                                        <rect key="frame" x="68" y="5.5" width="98" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="dzs-Y3-rle" firstAttribute="leading" secondItem="N1N-JP-5TU" secondAttribute="leading" id="3fY-Ih-4VP"/>
+                                    <constraint firstItem="Ik1-Bg-kqq" firstAttribute="leading" secondItem="dzs-Y3-rle" secondAttribute="trailing" constant="19" id="LiA-nv-0ny"/>
+                                    <constraint firstItem="Ik1-Bg-kqq" firstAttribute="centerY" secondItem="dzs-Y3-rle" secondAttribute="centerY" id="Ood-ar-Lsh"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ik1-Bg-kqq" secondAttribute="trailing" id="P3R-VF-uKo"/>
+                                    <constraint firstAttribute="bottom" secondItem="dzs-Y3-rle" secondAttribute="bottom" id="S3f-HT-kD4"/>
+                                    <constraint firstItem="dzs-Y3-rle" firstAttribute="top" secondItem="N1N-JP-5TU" secondAttribute="top" id="YHe-fV-Vo1"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -344,6 +367,8 @@
                             <constraint firstItem="FGV-jO-VA6" firstAttribute="top" secondItem="VRw-jH-v4L" secondAttribute="bottom" constant="8.5" id="Fq2-99-mt5"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Sna-by-PJi"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="m5K-Km-wEB"/>
+                            <constraint firstItem="N1N-JP-5TU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="nDw-26-LyD"/>
+                            <constraint firstItem="N1N-JP-5TU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="74" id="tRd-fH-QI2"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="R41-rv-jVa" secondAttribute="trailing" constant="2" id="u2q-d8-qu6"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="FGV-jO-VA6" secondAttribute="bottom" constant="73" id="vWZ-th-41y"/>
                             <constraint firstItem="R41-rv-jVa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="2" id="y5b-rh-yLr"/>
@@ -356,7 +381,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="20" y="94"/>
+            <point key="canvasLocation" x="18.840579710144929" y="93.75"/>
         </scene>
     </scenes>
     <resources>
