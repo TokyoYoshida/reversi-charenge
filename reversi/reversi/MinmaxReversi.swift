@@ -105,9 +105,10 @@ class ReversiModel: NSObject, GKGameModel {
     }
     
     func apply(_ gameModelUpdate: GKGameModelUpdate) {
+        guard let update = gameModelUpdate as? Update else {return}
         print("current player: \(currentPlayer.description)")
-        print("update value = \(gameModelUpdate.value)")
-        board.putWithReverse(gameModelUpdate.value, currentPlayer)
+        print("update value = \(update.position)")
+        board.putWithReverse(update.position, currentPlayer)
         printState()
         switchCurrentPlayer()
     }
