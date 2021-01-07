@@ -63,15 +63,17 @@ class ViewController: UIViewController {
     }
     
     @objc func tapButton(_ sender: UIButton) {
-        func putToBoardIfNotMaintenanceMode() {
+        func putToBoardIfNotMaintenanceMode() -> Bool {
             switch _board.getState(sender.tag) {
             case .pointNone:
-                if _board.canPut(.pointBlack, sender.tag) {
-                    _board.putWithReverse(sender.tag, .pointBlack)
+                if !_board.canPut(.pointBlack, sender.tag) {
+                    return false
                 }
+                _board.putWithReverse(sender.tag, .pointBlack)
                 renderState()
+                return true
             case .pointBlack, .pointWhite:
-                break
+                return false
             }
             turn += 1
         }
@@ -87,16 +89,17 @@ class ViewController: UIViewController {
             }
             renderState()
         }
-        func putToBoard() {
+        func putToBoard() -> Bool {
             if maintenanceMode {
                 putToBoardIfMaintenanceMode()
+                return false
             } else {
-                putToBoardIfNotMaintenanceMode()
+                return putToBoardIfNotMaintenanceMode()
             }
         }
         clearScreen()
-        putToBoard()
-        if autoMode {
+        let result = putToBoard()
+        if result && autoMode {
             putByAI()
         }
         print("@@@" + sender.tag.description)
