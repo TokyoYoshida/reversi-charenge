@@ -25,7 +25,6 @@ struct BetaReversi: ReversiStrategy {
             let mlArray = try! MLMultiArray(shape: [1,2,8,8], dataType: .float32)
             put(mlArray, 0, targetPlayer)
             put(mlArray, 1, targetPlayer.opponent)
-            print(ReversiModelDecoder.decode(mlArray))
             return mlArray
         }
     }
@@ -64,6 +63,7 @@ struct BetaReversi: ReversiStrategy {
             if filtered.isEmpty {
                 return -1
             }
+            print(filtered)
             return filtered[0].value
         }
     }
