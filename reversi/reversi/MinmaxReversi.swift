@@ -39,7 +39,7 @@ class ReversiModel: NSObject, GKGameModel {
     var id = 0
     
     func convertPlayerToState(_ player: Player) -> State {
-        if player == _players[targetPlayerIndex] {
+        if player.playerId == _players[targetPlayerIndex].playerId {
             return targetPlayer
         } else {
             return targetPlayer.opponent
