@@ -163,12 +163,31 @@ class Board {
         return
     }
     
-    func isWin(_ ownState: State) -> Bool {
+    func isWin(_ ownState: State, shallow: Bool = false) -> Bool {
         func isAllStateComplete() -> Bool {
             return _state.firstIndex(of: ownState.opponent) == nil
         }
+        func isAllMoveIsNothing() -> Bool {
+            let canMove = _state.enumerated().first {
+                (index, state) in
+                state == .pointNone && (canPut(ownState, index) || canPut(ownState.opponent, index))
+            }
+            return canMove == nil
+        }
+        func countState(_ target: State) -> Int {
+            return _state.filter {$0 == target}.count
+        }
         if isAllStateComplete() {
             return true
+        }
+        if shallow {
+            return false
+        }
+        if isAllMoveIsNothing() {
+            print("all move is nothing")
+            let ownScore = countState(ownState)
+            let opponentScore = countState(ownState.opponent)
+            return ownScore > opponentScore
         }
         return false
     }

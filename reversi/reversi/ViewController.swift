@@ -12,10 +12,20 @@ class ViewController: UIViewController {
 
     var turn: Int = 0
     let _board = Board()
-    let strategy = MinmaxReversi()
+    let strategy = BetaReversi() //MinmaxReversi()
     @IBOutlet weak var board: UIStackView!
     @IBOutlet weak var messageLabel: UILabel!
-
+    @IBOutlet weak var maintenanceSwitch: UISwitch!
+    @IBOutlet weak var autoSwitch: UISwitch!
+    
+    var maintenanceMode: Bool {
+        maintenanceSwitch.isOn
+    }
+    
+    var autoMode: Bool {
+        autoSwitch.isOn
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         clearScreen()
@@ -53,18 +63,46 @@ class ViewController: UIViewController {
     }
     
     @objc func tapButton(_ sender: UIButton) {
-        clearScreen()
-        print("@@@" + sender.tag.description)
-        switch _board.getState(sender.tag) {
-        case .pointNone:
-            if _board.canPut(.pointBlack, sender.tag) {
+        func putToBoardIfNotMaintenanceMode() -> Bool {
+            switch _board.getState(sender.tag) {
+            case .pointNone:
+                if !_board.canPut(.pointBlack, sender.tag) {
+                    return false
+                }
                 _board.putWithReverse(sender.tag, .pointBlack)
+                renderState()
+                return true
+            case .pointBlack, .pointWhite:
+                return false
+            }
+            turn += 1
+        }
+        func putToBoardIfMaintenanceMode() {
+            switch _board.getState(sender.tag) {
+            case .pointNone:
+                _board.putWithoutReverse(sender.tag, .pointBlack)
+            case .pointBlack:
+                _board.putWithoutReverse(sender.tag, .pointWhite)
+            case .pointWhite:
+                _board.putWithoutReverse(sender.tag, .pointNone)
+                break
             }
             renderState()
-        case .pointBlack, .pointWhite:
-            break
         }
-        turn += 1
+        func putToBoard() -> Bool {
+            if maintenanceMode {
+                putToBoardIfMaintenanceMode()
+                return false
+            } else {
+                return putToBoardIfNotMaintenanceMode()
+            }
+        }
+        clearScreen()
+        let result = putToBoard()
+        if result && autoMode {
+            putByAI()
+        }
+        print("@@@" + sender.tag.description)
     }
     
     @IBAction func tappedAIPut(_ sender: Any) {

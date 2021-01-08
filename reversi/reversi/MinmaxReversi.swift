@@ -35,22 +35,15 @@ class ReversiModel: NSObject, GKGameModel {
     var board = Board()
     let targetPlayerIndex = 0
     lazy var currentPlayerIndex = targetPlayerIndex // current player in the minmax tree
-    var currentPlayer: State {
-        currentPlayerIndex == targetPlayerIndex ? targetPlayer : targetPlayer.opponent
-    }
     var targetPlayer: State = .pointNone // target player to predict
     var id = 0
     
     func convertPlayerToState(_ player: Player) -> State {
-        if player == _players[targetPlayerIndex] {
+        if player.playerId == _players[targetPlayerIndex].playerId {
             return targetPlayer
         } else {
             return targetPlayer.opponent
         }
-    }
-    
-    func switchCurrentPlayer() {
-        currentPlayerIndex = 1 - currentPlayerIndex
     }
     
     func printState() {
@@ -69,16 +62,20 @@ class ReversiModel: NSObject, GKGameModel {
             let eval = BetaReversi.ReversiPredictionDecoder.eval(predict, board._state, player)
             return eval
         }
-        let playerValue = getValue(currentPlayer)
-        let opponentValue = getValue(currentPlayer.opponent)
+        let player = convertPlayerToState(player as! Player)
+        let playerValue = getValue(player)
+        let opponentValue = getValue(player.opponent)
         let rawScore = playerValue - opponentValue
-        print("Score = \(Int(floor(rawScore*1000000000)))")
+        print("\(player.description) Score = \(Int(floor(rawScore*1000000000)))")
         let score = Int(floor(rawScore*1000000000))
         return score
     }
     
     func isWin(for player: GKGameModelPlayer) -> Bool {
-        board.isWin(convertPlayerToState(player as! Player))
+        let player = convertPlayerToState(player as! Player)
+        let isWin = board.isWin(player)
+        print("\(player.description) isWin = \(isWin)")
+        return isWin
     }
 
     var players: [GKGameModelPlayer]? {
@@ -97,17 +94,27 @@ class ReversiModel: NSObject, GKGameModel {
     }
         
     func gameModelUpdates(for player: GKGameModelPlayer) -> [GKGameModelUpdate]? {
-        let predict = strategy.predict(board._state, currentPlayer)
+        let player = convertPlayerToState(player as! Player)
+        let predict = strategy.predict(board._state, player)
         assert(predict.count == 64, "wrong range.")
-        let moves = BetaReversi.ReversiPredictionDecoder.decode(predict, board._state, currentPlayer)
+        let moves = BetaReversi.ReversiPredictionDecoder.decode(predict, board._state, player)
         let upd = moves.map { Update($0, 0) }
         return upd
     }
     
     func apply(_ gameModelUpdate: GKGameModelUpdate) {
+        func getCurrentPlayer() -> State {
+            currentPlayerIndex == targetPlayerIndex ? targetPlayer : targetPlayer.opponent
+        }
+        func switchCurrentPlayer() {
+            currentPlayerIndex = 1 - currentPlayerIndex
+        }
+        guard let update = gameModelUpdate as? Update else {return}
+        let currentPlayer = getCurrentPlayer()
+        print("apply -----")
         print("current player: \(currentPlayer.description)")
-        print("update value = \(gameModelUpdate.value)")
-        board.putWithReverse(gameModelUpdate.value, currentPlayer)
+        print("update value = \(update.position)")
+        board.putWithReverse(update.position, currentPlayer)
         printState()
         switchCurrentPlayer()
     }
@@ -123,11 +130,13 @@ class ReversiModel: NSObject, GKGameModel {
 }
     
 struct MinmaxReversi: ReversiStrategy {
-    let strategist = GKMinmaxStrategist()
+//    let strategist = GKMinmaxStrategist()
+    let strategist = GKMonteCarloStrategist()
     let gameModel = ReversiModel()
     init() {
         strategist.gameModel = gameModel
-        strategist.maxLookAheadDepth = 3
+        strategist.explorationParameter = 1
+//        strategist.maxLookAheadDepth = 2
     }
     func predict(_ board: [State],  _ targetPlayer: State, completion: ([Float32]) -> Void) {
         gameModel.updateState(board, targetPlayer)
