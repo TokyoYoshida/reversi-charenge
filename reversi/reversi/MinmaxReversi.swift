@@ -135,7 +135,7 @@ struct MinmaxReversi: ReversiStrategy {
     init() {
         strategist.gameModel = gameModel
 //        strategist.explorationParameter = 1
-        strategist.maxLookAheadDepth = 3
+        strategist.maxLookAheadDepth = 2
     }
     func predict(_ board: [State],  _ targetPlayer: State, completion: ([Float32]) -> Void) {
         gameModel.updateState(board, targetPlayer)
