@@ -130,12 +130,13 @@ class ReversiModel: NSObject, GKGameModel {
 }
     
 struct MinmaxReversi: ReversiStrategy {
-    let strategist = GKMinmaxStrategist()
+//    let strategist = GKMinmaxStrategist()
+    let strategist = GKMonteCarloStrategist()
     let gameModel = ReversiModel()
     init() {
         strategist.gameModel = gameModel
-//        strategist.explorationParameter = 1
-        strategist.maxLookAheadDepth = 2
+        strategist.explorationParameter = 1
+//        strategist.maxLookAheadDepth = 2
     }
     func predict(_ board: [State],  _ targetPlayer: State, completion: ([Float32]) -> Void) {
         gameModel.updateState(board, targetPlayer)
