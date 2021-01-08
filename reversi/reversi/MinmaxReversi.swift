@@ -134,7 +134,7 @@ struct MinmaxReversi: ReversiStrategy {
     let gameModel = ReversiModel()
     init() {
         strategist.gameModel = gameModel
-        strategist.explorationParameter = 2
+        strategist.explorationParameter = 1
     }
     func predict(_ board: [State],  _ targetPlayer: State, completion: ([Float32]) -> Void) {
         gameModel.updateState(board, targetPlayer)
