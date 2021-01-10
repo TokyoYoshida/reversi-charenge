@@ -99,7 +99,8 @@ class ReversiModel: NSObject, GKGameModel {
         assert(predict.count == 64, "wrong range.")
         let moves = BetaReversi.ReversiPredictionDecoder.decode(predict, board._state, player)
         let upd = moves.map { Update($0, 0) }
-        return upd
+        let max = upd.count <= 2 ? upd.count : 2
+        return [Update](upd[0..<max])
     }
     
     func apply(_ gameModelUpdate: GKGameModelUpdate) {
