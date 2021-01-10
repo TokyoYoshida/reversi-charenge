@@ -12,7 +12,8 @@ class ViewController: UIViewController {
 
     var turn: Int = 0
     let _board = Board()
-    let strategy = BetaReversi() //MinmaxReversi()
+    let strategy = BetaReversi()
+//    let strategy = MinmaxReversi()
     @IBOutlet weak var board: UIStackView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var maintenanceSwitch: UISwitch!
